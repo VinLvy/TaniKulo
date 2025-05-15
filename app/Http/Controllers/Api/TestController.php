@@ -12,4 +12,3 @@ class TestController extends Controller
         return response()->json(['pesan' => 'Test REST API Controller Laravel 12']);
     }
 }
-
