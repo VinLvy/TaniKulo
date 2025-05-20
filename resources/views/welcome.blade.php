@@ -13,7 +13,7 @@
             <p class="text-gray-600 text-center">Ini adalah halaman awal dengan template Tailwind CSS.</p>
             <div class="mt-6 text-center">
                 <a href="#" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
-                    Klik di Sini
+                    Tombol ga guna
                 </a>
             </div>
         </div>
