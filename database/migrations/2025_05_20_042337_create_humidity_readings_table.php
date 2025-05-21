@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('humidity_readings', function (Blueprint $table) {
-            $table->id();
-            $table->decimal('humidity_value', 5, 2); // Stores humidity with 2 decimal places
-            $table->timestamps();
-        });
+        // Schema::create('humidity_readings', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->decimal('humidity_value', 5, 2); // Stores humidity with 2 decimal places
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('humidity_readings');
+        // Schema::dropIfExists('humidity_readings');
     }
 };
