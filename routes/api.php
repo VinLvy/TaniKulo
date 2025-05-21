@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TestController;
+use App\Http\Controllers\Api\Auth\GoogleAuthController;
 
 Route::match(['get', 'post'], '/tes', [TestController::class, '__invoke']);
 
@@ -14,4 +15,10 @@ Route::post('/kirim-data', function (Illuminate\Http\Request $request) {
         'status' => 'received',
         'data' => $request->all()
     ]);
+});
+
+Route::get('/auth/google', [GoogleAuthController::class, 'redirect']);
+Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
 });
