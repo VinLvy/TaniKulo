@@ -15,3 +15,8 @@ Route::post('/kirim-data', function (Illuminate\Http\Request $request) {
         'data' => $request->all()
     ]);
 });
+
+use App\Http\Controllers\Api\TankLevelsController;
+
+Route::get('/tank-levels', [TankLevelsController::class, 'index']);
+Route::post('/tank-levels', [TankLevelsController::class, 'update']);
