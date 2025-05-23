@@ -55,6 +55,15 @@ return new class extends Migration
             $table->float('amount')->nullable(); // gram/ml
             $table->timestamp('recorded_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
+
+        Schema::create('wifi_settings', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('device_id')->constrained('devices')->onDelete('cascade');
+            $table->string('ssid');
+            $table->string('password');
+            $table->boolean('is_active')->default(true); // bisa disable jika device pindah lokasi
+            $table->timestamps();
+        });
     }
 
     /**
@@ -62,8 +71,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('water_logs');
+        Schema::dropIfExists('wifi_settings');
         Schema::dropIfExists('fertilizer_logs');
+        Schema::dropIfExists('water_logs');
         Schema::dropIfExists('lux_readings');
         Schema::dropIfExists('humidity_readings');
         Schema::dropIfExists('moisture_readings');
