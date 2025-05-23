@@ -28,18 +28,21 @@ class GoogleAuthController extends Controller
                 [
                     'name' => $googleUser->getName(),
                     'google_id' => $googleUser->getId(),
-                    'password' => bcrypt(uniqid()), // password dummy
+                    'password' => bcrypt(uniqid()),
                 ]
             );
 
-            // Generate Sanctum token
             $token = $user->createToken('flutter_app')->plainTextToken;
 
-            // Kembalikan ke frontend dengan redirect + token di URL
-            return redirect()->away("yourflutterapp://auth-success?token={$token}");
+            // return redirect()->away("yourflutterapp://auth-success?token={$token}"); // Flutter
 
+            return response()->json([
+                'access_token' => $token,
+                'user' => $user,
+            ]);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            // return response()->json(['error' => 'Unauthorized'], 401); // Flutter
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 }
