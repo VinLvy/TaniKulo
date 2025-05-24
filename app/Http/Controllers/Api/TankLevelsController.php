@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class TankLevelsController extends Controller
 {
     //ganti data level air dan fertilize disini
-    private static $waterLevel = 1.0;
+    private static $waterLevel = 0.6;
     private static $fertilizerLevel = 0.4;
 
     public function index()
