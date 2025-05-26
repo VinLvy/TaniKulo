@@ -30,4 +30,14 @@ class Device extends Model
     {
         return $this->hasMany(PhReading::class);
     }
+
+    public function waterLogs()
+    {
+        return $this->hasMany(WaterLog::class);
+    }
+
+    public function fertilizerLogs()
+    {
+        return $this->hasMany(FertilizerLog::class);
+    }
 }
