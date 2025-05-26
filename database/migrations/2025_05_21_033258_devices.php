@@ -46,6 +46,13 @@ return new class extends Migration
             $table->timestamp('recorded_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
 
+        Schema::create('ph_readings', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('device_id')->constrained('devices')->onDelete('cascade');
+            $table->float('value');
+            $table->timestamp('recorded_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+        });
+
         Schema::create('water_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('device_id')->constrained('devices')->onDelete('cascade');
@@ -70,6 +77,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('fertilizer_logs');
         Schema::dropIfExists('water_logs');
+        Schema::dropIfExists('ph_readings');
         Schema::dropIfExists('lux_readings');
         Schema::dropIfExists('humidity_readings');
         Schema::dropIfExists('moisture_readings');
