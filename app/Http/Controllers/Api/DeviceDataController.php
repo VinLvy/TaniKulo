@@ -9,6 +9,8 @@ use App\Models\MoistureReading;
 use App\Models\HumidityReading;
 use App\Models\LuxReading;
 use App\Models\PhReading;
+use App\Models\WaterLog;
+use App\Models\FertilizerLog;
 
 class DeviceDataController extends Controller
 {
@@ -24,8 +26,14 @@ class DeviceDataController extends Controller
             'moisture' => 'required|numeric',
             'humidity' => 'required|numeric',
             'lux' => 'required|numeric',
+            'ph' => 'nullable|numeric',
+            'water_status' => 'nullable|boolean',
+            'fertilizer_status' => 'nullable|boolean',
+            'amount_water' => 'nullable|numeric',
+            'amount_fertilizer' => 'nullable|numeric',
         ]);
 
+        // Simpan data sensor
         MoistureReading::create([
             'device_id' => $device->id,
             'value' => $validated['moisture'],
@@ -41,12 +49,34 @@ class DeviceDataController extends Controller
             'value' => $validated['lux'],
         ]);
 
-        PhReading::create([
-            'device_id' => $device->id,
-            'value' => $request->input('ph', null), // Optional, if ph is not always sent
-        ]);
+        if ($request->has('ph')) {
+            PhReading::create([
+                'device_id' => $device->id,
+                'value' => $validated['ph'],
+            ]);
+        }
 
-        return response()->json(['message' => 'Sensor data stored successfully']);
+        // Simpan log penyiraman
+        if ($request->has('water_status')) {
+            WaterLog::create([
+                'device_id' => $device->id,
+                'status' => $validated['water_status'],
+                'amount' => $validated['amount_water'] ?? null,
+                'recorded_at' => now()
+            ]);
+        }
+
+        // Simpan log pemupukan
+        if ($request->has('fertilizer_status')) {
+            FertilizerLog::create([
+                'device_id' => $device->id,
+                'status' => $validated['fertilizer_status'],
+                'amount' => $validated['amount_fertilizer'] ?? null,
+                'recorded_at' => now()
+            ]);
+        }
+
+        return response()->json(['message' => 'Data stored successfully']);
     }
 
     public function status($serial)
