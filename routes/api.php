@@ -20,6 +20,8 @@ Route::post('/kirim-data', function (Illuminate\Http\Request $request) {
     ]);
 });
 
+Route::post('/testingDevice', [TestController::class, 'testingDevice']);
+
 Route::get('/tank-levels', [TankLevelsController::class, 'index']);
 Route::post('/tank-levels', [TankLevelsController::class, 'update']);
 Route::get('/auth/google', [GoogleAuthController::class, 'redirect']);
