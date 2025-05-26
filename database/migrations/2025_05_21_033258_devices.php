@@ -56,16 +56,16 @@ return new class extends Migration
         Schema::create('water_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('device_id')->constrained('devices')->onDelete('cascade');
-            $table->boolean('status');
-            $table->float('amount')->nullable();
+            $table->enum('status', ['on', 'off'])->default('off');
+            $table->float('amount')->nullable(); // dalam liter/ml
             $table->timestamp('recorded_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
 
         Schema::create('fertilizer_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('device_id')->constrained('devices')->onDelete('cascade');
-            $table->boolean('status');
-            $table->float('amount')->nullable();
+            $table->enum('status', ['on', 'off'])->default('off');
+            $table->float('amount')->nullable(); // dalam liter/ml
             $table->timestamp('recorded_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
     }
