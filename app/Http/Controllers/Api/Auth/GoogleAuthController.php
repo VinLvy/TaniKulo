@@ -36,10 +36,7 @@ class GoogleAuthController extends Controller
 
             // return redirect()->away("yourflutterapp://auth-success?token={$token}"); // Flutter
 
-            return response()->json([
-                'access_token' => $token,
-                'user' => $user,
-            ]);
+            return redirect()->away("http://localhost:57051/?token={$token}");
         } catch (\Exception $e) {
             // return response()->json(['error' => 'Unauthorized'], 401); // Flutter
             return response()->json(['error' => $e->getMessage()], 500);
