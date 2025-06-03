@@ -13,46 +13,59 @@ return new class extends Migration
     {
         Schema::create('devices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // <- tambah id_user
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('name');
             $table->string('serial_number')->unique();
+
+            // Tambahan kolom dari wifi_settings
+            $table->string('ssid')->nullable();
+            $table->string('password')->nullable();
+            $table->boolean('is_active')->default(true); // untuk status wifi
+
             $table->timestamps();
         });
 
         Schema::create('moisture_readings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('device_id')->constrained('devices')->onDelete('cascade');
-            $table->float('value'); // %
+            $table->float('value');
             $table->timestamp('recorded_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
 
         Schema::create('humidity_readings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('device_id')->constrained('devices')->onDelete('cascade');
-            $table->float('value'); // %
+            $table->float('value');
             $table->timestamp('recorded_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
 
         Schema::create('lux_readings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('device_id')->constrained('devices')->onDelete('cascade');
-            $table->float('value'); // lux
+            $table->float('value');
+            $table->timestamp('recorded_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+        });
+
+        Schema::create('ph_readings', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('device_id')->constrained('devices')->onDelete('cascade');
+            $table->float('value');
             $table->timestamp('recorded_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
 
         Schema::create('water_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('device_id')->constrained('devices')->onDelete('cascade');
-            $table->boolean('status'); // 0 = off, 1 = menyiram
-            $table->float('amount')->nullable(); // liter atau ml
+            $table->enum('status', ['on', 'off'])->default('off');
+            $table->float('amount')->nullable(); // dalam liter/ml
             $table->timestamp('recorded_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
 
         Schema::create('fertilizer_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('device_id')->constrained('devices')->onDelete('cascade');
-            $table->boolean('status'); // 0 = off, 1 = aktif
-            $table->float('amount')->nullable(); // gram/ml
+            $table->enum('status', ['on', 'off'])->default('off');
+            $table->float('amount')->nullable(); // dalam liter/ml
             $table->timestamp('recorded_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
     }
@@ -62,8 +75,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('water_logs');
         Schema::dropIfExists('fertilizer_logs');
+        Schema::dropIfExists('water_logs');
+        Schema::dropIfExists('ph_readings');
         Schema::dropIfExists('lux_readings');
         Schema::dropIfExists('humidity_readings');
         Schema::dropIfExists('moisture_readings');

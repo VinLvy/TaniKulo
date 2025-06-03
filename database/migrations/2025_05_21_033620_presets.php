@@ -20,6 +20,8 @@ return new class extends Migration
             $table->float('humidity_max')->nullable();
             $table->float('lux_min')->nullable();
             $table->float('lux_max')->nullable();
+            $table->float('ph_min')->nullable();
+            $table->float('ph_max')->nullable();
             $table->float('water_amount')->nullable(); // preset takaran air default
             $table->float('fertilizer_amount')->nullable(); // preset takaran pupuk default
             $table->timestamps();

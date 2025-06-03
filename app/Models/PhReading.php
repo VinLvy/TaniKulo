@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class HumidityReading extends Model
+class PhReading extends Model
 {
     use HasFactory;
 
