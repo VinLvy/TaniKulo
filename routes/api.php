@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\TestController;
 use App\Http\Controllers\Api\Auth\GoogleAuthController;
 use App\Http\Controllers\Api\TankLevelsController;
 use App\Http\Controllers\Api\DeviceDataController;
+use App\Http\Controllers\Api\MoisturesController;
 
 // Tes routes
 Route::match(['get', 'post'], '/tes', [TestController::class, '__invoke'])->name('tes.invoke');
@@ -28,6 +29,12 @@ Route::prefix('auth/google')->as('auth.google.')->controller(GoogleAuthControlle
 Route::prefix('tank-levels')->as('tank-levels.')->controller(TankLevelsController::class)->group(function () {
     Route::get('/', 'index')->name('index');     // tank-levels.index
     Route::post('/', 'update')->name('update');  // tank-levels.update
+});
+
+// Group: Moistures
+Route::prefix('moistures')->as('moistures.')->controller(MoisturesController::class)->group(function () {
+    Route::get('/', 'index')->name('index');     // moistures.index
+    Route::post('/', 'update')->name('update');  // moistures.update
 });
 
 // Group: Device Data
