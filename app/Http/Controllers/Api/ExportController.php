@@ -6,7 +6,11 @@ use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\DevicesExport;
 use App\Exports\MoistureReadingsExport;
-// dan lainnya...
+use App\Exports\HumidityReadingsExport;
+use App\Exports\PhReadingsExport;
+use App\Exports\LuxReadingsExport;
+use App\Exports\FertilizerLogsExport;
+use App\Exports\WaterLogsExport;
 
 class ExportController extends Controller
 {
@@ -20,6 +24,28 @@ class ExportController extends Controller
         return Excel::download(new MoistureReadingsExport, 'moistures.xlsx');
     }
 
-    // Tambahkan method lain untuk humidity, ph, lux, fertilizer, water, dll.
-}
+    public function humidity()
+    {
+        return Excel::download(new HumidityReadingsExport, 'humidity.xlsx');
+    }
 
+    public function ph()
+    {
+        return Excel::download(new PhReadingsExport, 'ph.xlsx');
+    }
+
+    public function lux()
+    {
+        return Excel::download(new LuxReadingsExport, 'lux.xlsx');
+    }
+
+    public function fertilizer()
+    {
+        return Excel::download(new FertilizerLogsExport, 'fertilizer.xlsx');
+    }
+
+    public function water()
+    {
+        return Excel::download(new WaterLogsExport, 'water.xlsx');
+    }
+}
