@@ -11,6 +11,7 @@ use App\Exports\PhReadingsExport;
 use App\Exports\LuxReadingsExport;
 use App\Exports\FertilizerLogsExport;
 use App\Exports\WaterLogsExport;
+use App\Exports\AllDevicesDataExport;
 
 class ExportController extends Controller
 {
@@ -47,5 +48,10 @@ class ExportController extends Controller
     public function water()
     {
         return Excel::download(new WaterLogsExport, 'water.xlsx');
+    }
+
+    public function exportAll()
+    {
+        return Excel::download(new AllDevicesDataExport, 'all_devices_data.xlsx');
     }
 }
