@@ -11,6 +11,7 @@ class AllDevicesDataExport implements WithMultipleSheets
     public function sheets(): array
     {
         return [
+            new UserExport(),
             new DevicesExport(),
             new MoistureReadingsExport(),
             new HumidityReadingsExport(),
