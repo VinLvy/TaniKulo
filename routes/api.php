@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Auth\GoogleAuthController;
 use App\Http\Controllers\Api\TankLevelsController;
 use App\Http\Controllers\Api\DeviceDataController;
 use App\Http\Controllers\Api\MoisturesController;
+use App\Http\Controllers\Api\ExportController;
 
 // Tes routes
 Route::match(['get', 'post'], '/tes', [TestController::class, '__invoke'])->name('tes.invoke');
@@ -41,4 +42,15 @@ Route::prefix('moistures')->as('moistures.')->controller(MoisturesController::cl
 Route::prefix('devices')->as('devices.')->group(function () {
     Route::get('/{serial}/status', [DeviceDataController::class, 'status'])->name('status');     // devices.status
     Route::post('/{serial}/data', [DeviceDataController::class, 'sendData'])->name('send-data'); // devices.send-data
+});
+
+// Group: Export
+Route::prefix('export')->as('export.')->controller(ExportController::class)->group(function () {
+    Route::get('/devices', 'devices')->name('devices');           // /api/export/devices
+    Route::get('/moistures', 'moistures')->name('moistures');     // /api/export/moistures
+    Route::get('/humidity', 'humidity')->name('humidity');        // /api/export/humidity
+    Route::get('/ph', 'ph')->name('ph');                          // /api/export/ph
+    Route::get('/lux', 'lux')->name('lux');                       // /api/export/lux
+    Route::get('/fertilizer', 'fertilizer')->name('fertilizer'); // /api/export/fertilizer
+    Route::get('/water', 'water')->name('water');                 // /api/export/water
 });
