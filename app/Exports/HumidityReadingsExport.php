@@ -2,15 +2,15 @@
 
 namespace App\Exports;
 
-use App\Models\MoistureReading;
+use App\Models\HumidityReading;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class MoistureReadingsExport implements FromCollection, WithHeadings
+class HumidityReadingsExport implements FromCollection, WithHeadings
 {
     public function collection()
     {
-        return MoistureReading::all([
+        return HumidityReading::all([
             'id',
             'device_id',
             'value',
@@ -23,8 +23,8 @@ class MoistureReadingsExport implements FromCollection, WithHeadings
         return [
             'ID',
             'Device ID',
-            'Moisture Value',
-            'Recorded At',
+            'Humidity Value',
+            'Recorded At'
         ];
     }
 }
