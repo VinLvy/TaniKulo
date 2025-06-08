@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\DeviceController;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\TestController;
 use App\Http\Controllers\Api\Auth\GoogleAuthController;
@@ -77,3 +79,9 @@ Route::prefix('export')->as('export.')->controller(ExportController::class)->gro
     Route::get('/fertilizer', 'fertilizer')->name('fertilizer'); // /api/export/fertilizer
     Route::get('/water', 'water')->name('water');                 // /api/export/water
 });
+
+Route::post('/device/calibrate',      [DeviceController::class, 'sendCalibration']);
+Route::get('/device/data',           [DeviceController::class, 'receiveData']);
+
+Route::post('/friend/calibrate',      [DeviceController::class, 'sendCalibrationToFriend']);
+Route::post('/friend/data',           [DeviceController::class, 'receiveFriendData']);
