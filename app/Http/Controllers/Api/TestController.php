@@ -20,7 +20,7 @@ class TestController extends Controller
             self::$humidity = $validated['humidity'];
 
             return Response::json([
-                'message' => 'Humidity updated successfully' ,
+                'message' => 'Humidity updated successfully',
                 'humidity' => self::$humidity
             ]);
         }
@@ -28,5 +28,26 @@ class TestController extends Controller
         return Response::json([
             'humidity' => self::$humidity
         ]);
+    }
+
+    // testing get data from device 
+    public function testingDevice(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            $validated = $request->validate([
+                'humidity' => 'required|numeric|between:0,100'
+            ]);
+
+            $humidity = $validated['humidity'];
+
+            return response()->json([
+                'message' => 'Testing Humidity Successful',
+                'humidity' => $humidity
+            ], 200);
+        }
+
+        return response()->json([
+            'message' => 'Gagal bos'
+        ], 400);
     }
 }

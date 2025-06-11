@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\MoistureReading;
 use Illuminate\Http\Request;
 
 class MoisturesController extends Controller
@@ -35,5 +36,27 @@ class MoisturesController extends Controller
             'moisture' => self::$moistureData['value'],
             'recorded_at' => self::$moistureData['recorded_at']
         ]);
+    }
+
+    public function store(Request $request)
+    {
+        // Validasi request
+        $request->validate([
+            'moisture' => 'required|numeric|min:0|max:100',
+            'status' => 'required|string',
+        ]);
+
+        // Simpan data ke database
+        $reading = MoistureReading::create([
+            'moisture' => $request->moisture,
+            'status' => $request->status,
+            'recorded_at' => now(),
+        ]);
+
+        // Beri respon sukses
+        return response()->json([
+            'message' => 'Data kelembapan berhasil disimpan.',
+            'data' => $reading
+        ], 201);
     }
 }

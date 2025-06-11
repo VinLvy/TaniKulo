@@ -41,6 +41,7 @@ Route::prefix('tank-levels')->as('tank-levels.')->controller(TankLevelsControlle
 Route::prefix('moistures')->as('moistures.')->controller(MoisturesController::class)->group(function () {
     Route::get('/', 'index')->name('index');     // moistures.index
     Route::post('/', 'update')->name('update');  // moistures.update
+    Route::post('/store', 'store')->name('store');  // moistures.store
 });
 
 // Group: Humidity
