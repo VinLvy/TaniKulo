@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Models\MoistureReading;
 use Illuminate\Http\Request;
+use App\Models\MoistureReading;
+use App\Models\MoisturesSetting;
+use App\Http\Controllers\Controller;
 
 class MoisturesController extends Controller
 {
@@ -54,9 +55,83 @@ class MoisturesController extends Controller
         ]);
 
         // Beri respon sukses
+        if ($reading) {
+            return response()->json([
+                'message' => 'Data kelembapan berhasil disimpan.',
+                'data' => $reading
+            ], 201);
+        } else {
+            return response()->json([
+                'message' => 'Gagal menyimpan data.',
+            ], 500);
+        }
+    }
+
+    //    ---- CONTROLLER FOR SETTING SENSOR MOISTURE ----
+    public function settingMoistureStore(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'warnLower' => 'required|numeric|min:0|max:100',
+            'warnUpper' => 'required|numeric|min:0|max:100',
+            'set_by' => 'required|string',
+        ]);
+
+        MoisturesSetting::where('status', 'online')->update(['status' => 'offline']);
+
+
+        $createSetting = MoisturesSetting::create([
+            'warnLower' => $request->warnLower,
+            'warnUpper' => $request->warnUpper,
+            'status' => "online",
+            'set_by' => $request->set_by,
+        ]);
+
+        // Respon
+        if ($createSetting) {
+            return response()->json([
+                'message' => 'Pengaturan sensor berhasil disimpan.',
+                'data' => $createSetting
+            ], 201);
+        } else {
+            return response()->json([
+                'message' => 'Gagal menyimpan data.',
+            ], 500);
+        }
+    }
+
+
+    public function settingMoistureUpdate(Request $request, $id)
+    {
+        // Validasi input
+        $request->validate([
+            'warnLower' => 'required|numeric|min:0|max:100',
+            'warnUpper' => 'required|numeric|min:0|max:100',
+            'status' => 'required|string',
+            'set_by' => 'required|string',
+        ]);
+
+        // Cari data berdasarkan ID
+        $setting = MoisturesSetting::find($id);
+
+        if (!$setting) {
+            return response()->json([
+                'message' => 'Data tidak ditemukan.',
+            ], 404);
+        }
+
+        // Update data
+        $setting->update([
+            'warnLower' => $request->warnLower,
+            'warnUpper' => $request->warnUpper,
+            'status' => $request->status,
+            'set_by' => $request->set_by,
+            'recorded_at' => now(), // jika kamu ingin update waktu pencatatan juga
+        ]);
+
         return response()->json([
-            'message' => 'Data kelembapan berhasil disimpan.',
-            'data' => $reading
-        ], 201);
+            'message' => 'Pengaturan sensor berhasil diperbarui.',
+            'data' => $setting
+        ], 200);
     }
 }
