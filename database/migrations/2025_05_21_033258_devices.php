@@ -49,6 +49,15 @@ return new class extends Migration
             $table->timestamp('recorded_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
 
+        Schema::create('humidity_settings', function (Blueprint $table) {
+            $table->id();
+            $table->float('warnLower');
+            $table->float('warnUpper');
+            $table->string('status');
+            $table->string('set_by');
+            $table->timestamp('recorded_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+        });
+
         Schema::create('lux_readings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('device_id')->constrained('devices')->onDelete('cascade');
@@ -56,10 +65,28 @@ return new class extends Migration
             $table->timestamp('recorded_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
 
+        Schema::create('lux_settings', function (Blueprint $table) {
+            $table->id();
+            $table->float('warnLower');
+            $table->float('warnUpper');
+            $table->string('status');
+            $table->string('set_by');
+            $table->timestamp('recorded_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+        });
+
         Schema::create('ph_readings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('device_id')->constrained('devices')->onDelete('cascade');
             $table->float('value');
+            $table->timestamp('recorded_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+        });
+
+        Schema::create('ph_settings', function (Blueprint $table) {
+            $table->id();
+            $table->float('warnLower');
+            $table->float('warnUpper');
+            $table->string('status');
+            $table->string('set_by');
             $table->timestamp('recorded_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
 
