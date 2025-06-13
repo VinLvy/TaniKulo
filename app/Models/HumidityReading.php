@@ -9,7 +9,7 @@ class HumidityReading extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['device_id', 'value'];
+    protected $fillable = ['device_id', 'humidity', 'status', 'recorded_at'];
 
     public $timestamps = false;
 

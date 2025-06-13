@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\HumidityReading;
 use App\Models\HumiditySetting;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Http;
 
 class HumidityController extends Controller
 {
@@ -39,12 +40,15 @@ class HumidityController extends Controller
         ]);
     }
 
+    /**
+     * Simpan data kelembapan udara dari IoT
+     */
     public function store(Request $request)
     {
         $request->validate([
             'humidity' => 'required|numeric|min:0|max:100',
             'status' => 'required|string',
-            'device_id' => 'required|exists:devices,id',
+            'device_id' => 'nullable|exists:devices,id',
         ]);
 
         $reading = HumidityReading::create([
@@ -66,19 +70,26 @@ class HumidityController extends Controller
         }
     }
 
-    // ---- CONTROLLER UNTUK PENGATURAN SENSOR KELEMBAPAN ----
+    /**
+     * Simpan pengaturan kelembapan terbaru dan kirim ke IoT
+     */
     public function settingHumidityStore(Request $request)
     {
         $request->validate([
             'warnLower' => 'required|numeric|min:0|max:100',
             'warnUpper' => 'required|numeric|min:0|max:100',
             'set_by' => 'required|string',
+            'device_id' => 'nullable|exists:devices,id',
         ]);
 
-        // Nonaktifkan pengaturan sebelumnya
-        HumiditySetting::where('status', 'online')->update(['status' => 'offline']);
+        if ($request->device_id) {
+            HumiditySetting::where('device_id', $request->device_id)
+                ->where('status', 'online')
+                ->update(['status' => 'offline']);
+        }
 
         $setting = HumiditySetting::create([
+            'device_id' => $request->device_id,
             'warnLower' => $request->warnLower,
             'warnUpper' => $request->warnUpper,
             'status' => 'online',
@@ -87,15 +98,32 @@ class HumidityController extends Controller
         ]);
 
         if ($setting) {
-            return response()->json([
-                'message' => 'Pengaturan sensor kelembapan berhasil disimpan.',
-                'data' => $setting
-            ], 201);
-        } else {
-            return response()->json([
-                'message' => 'Gagal menyimpan pengaturan.',
-            ], 500);
+            try {
+                $iotUrl = "http://your-iot-device.local/api/set-humidity?" . http_build_query([
+                    'warnLower' => $request->warnLower,
+                    'warnUpper' => $request->warnUpper,
+                    'device_id' => $request->device_id
+                ]);
+
+                $response = Http::get($iotUrl);
+
+                return response()->json([
+                    'message' => 'Pengaturan sensor kelembapan berhasil disimpan dan dikirim ke perangkat IoT.',
+                    'data' => $setting,
+                    'iot_response' => $response->body()
+                ], 201);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => 'Pengaturan disimpan, tetapi gagal mengirim ke perangkat IoT.',
+                    'data' => $setting,
+                    'error' => $e->getMessage()
+                ], 500);
+            }
         }
+
+        return response()->json([
+            'message' => 'Gagal menyimpan pengaturan.',
+        ], 500);
     }
 
     public function settingHumidityUpdate(Request $request, $id)

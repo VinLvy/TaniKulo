@@ -9,7 +9,7 @@ class LuxReading extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['device_id', 'value'];
+    protected $fillable = ['device_id', 'lux', 'status', 'recorded_at'];
 
     public $timestamps = false;
 

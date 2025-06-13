@@ -11,7 +11,7 @@ class HumiditySetting extends Model
 
     protected $table = 'humidity_settings';
 
-    protected $fillable = ['warnLower', 'warnUpper', 'status', 'set_by', 'recorded_at'];
+    protected $fillable = ['device_id', 'warnLower', 'warnUpper', 'status', 'set_by', 'recorded_at'];
 
     public $timestamps = false;
 
