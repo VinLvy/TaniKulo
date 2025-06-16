@@ -16,11 +16,23 @@ class HumidityController extends Controller
         'recorded_at' => null,
     ];
 
+    //Data Soil Moisture
     public function index()
     {
+        //get data from database or model
+        $HumidityData = HumidityReading::latest('recorded_at')->first();
+
+        if (!$HumidityData) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data moisture tidak ditemukan.',
+            ], 404);
+        }
+
         return response()->json([
-            'humidity' => self::$humidityData['value'],
-            'recorded_at' => self::$humidityData['recorded_at']
+            'success' => true,
+            'moisture' => $HumidityData->value,
+            'recorded_at' => $HumidityData->recorded_at
         ]);
     }
 
@@ -47,20 +59,20 @@ class HumidityController extends Controller
     {
         $request->validate([
             'humidity' => 'required|numeric|min:0|max:100',
+            'temperature' => 'required|numeric|min:0|max:100',
             'status' => 'required|string',
-            'device_id' => 'nullable|exists:devices,id',
         ]);
 
         $reading = HumidityReading::create([
-            'device_id' => $request->device_id,
-            'value' => $request->humidity,
+            'humidity' => $request->humidity,
+            'temperature' => $request->temperature,
             'status' => $request->status,
             'recorded_at' => now(),
         ]);
 
         if ($reading) {
             return response()->json([
-                'message' => 'Data kelembapan udara berhasil disimpan.',
+                'message' => 'Data kelembapan udara & suhu berhasil disimpan.',
                 'data' => $reading
             ], 201);
         } else {
@@ -76,10 +88,11 @@ class HumidityController extends Controller
     public function settingHumidityStore(Request $request)
     {
         $request->validate([
-            'warnLower' => 'required|numeric|min:0|max:100',
-            'warnUpper' => 'required|numeric|min:0|max:100',
+            'warnLowerTemperature' => 'required|numeric|min:0|max:100',
+            'warnUpperTemperature' => 'required|numeric|min:0|max:100',
+            'warnLowerHumidity' => 'required|numeric|min:0|max:100',
+            'warnUpperHumidity' => 'required|numeric|min:0|max:100',
             'set_by' => 'required|string',
-            'device_id' => 'nullable|exists:devices,id',
         ]);
 
         if ($request->device_id) {
@@ -89,9 +102,10 @@ class HumidityController extends Controller
         }
 
         $setting = HumiditySetting::create([
-            'device_id' => $request->device_id,
-            'warnLower' => $request->warnLower,
-            'warnUpper' => $request->warnUpper,
+            'warnLowerTemperature' => $request->warnLowerTemperature,
+            'warnUpperTemperature' => $request->warnUpperTemperature,
+            'warnLowerHumidity' => $request->warnLowerHumidity,
+            'warnUpperHumidity' => $request->warnUpperHumidity,
             'status' => 'online',
             'set_by' => $request->set_by,
             'recorded_at' => now(),
@@ -129,9 +143,10 @@ class HumidityController extends Controller
     public function settingHumidityUpdate(Request $request, $id)
     {
         $request->validate([
-            'warnLower' => 'required|numeric|min:0|max:100',
-            'warnUpper' => 'required|numeric|min:0|max:100',
-            'status' => 'required|string',
+            'warnLowerTemperature' => 'required|numeric|min:0|max:100',
+            'warnUpperTemperature' => 'required|numeric|min:0|max:100',
+            'warnLowerHumidity' => 'required|numeric|min:0|max:100',
+            'warnUpperHumidity' => 'required|numeric|min:0|max:100',
             'set_by' => 'required|string',
         ]);
 
@@ -144,8 +159,10 @@ class HumidityController extends Controller
         }
 
         $setting->update([
-            'warnLower' => $request->warnLower,
-            'warnUpper' => $request->warnUpper,
+            'warnLowerTemperature' => $request->warnLowerTemperature,
+            'warnUpperTemperature' => $request->warnUpperTemperature,
+            'warnLowerHumidity' => $request->warnLowerHumidity,
+            'warnUpperHumidity' => $request->warnUpperHumidity,
             'status' => $request->status,
             'set_by' => $request->set_by,
             'recorded_at' => now(),

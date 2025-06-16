@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\HumidityController;
 use App\Http\Controllers\Api\LuxController;
 use App\Http\Controllers\Api\PhController;
 use App\Http\Controllers\Api\ExportController;
+use App\Http\Controllers\RainDropController;
 
 // Tes routes
 Route::match(['get', 'post'], '/tes', [TestController::class, '__invoke'])->name('tes.invoke');
@@ -59,6 +60,12 @@ Route::prefix('humidity')->as('humidity.')->controller(HumidityController::class
     Route::post('/settingHumidity', 'settingHumidityStore')->name('settingHumidityStore');
     // setting humidity update
     Route::post('/updateSettingHumidity', 'settingHumidityUpdate')->name('settingHumidityUpdate');
+});
+
+// Group: Raindrop
+Route::prefix('raindrop')->as('raindrop.')->controller(RainDropController::class)->group(function () {
+    Route::get('/', 'index')->name('index');     // lux.index
+    Route::post('/store', 'store')->name('store');  // lux.update
 });
 
 // Group: Lux

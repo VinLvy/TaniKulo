@@ -48,6 +48,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('device_id')->nullable()->constrained('devices')->onDelete('cascade');
             $table->float('humidity');
+            $table->float('temperature');
             $table->string('status');
             $table->timestamp('recorded_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
@@ -55,8 +56,10 @@ return new class extends Migration
         Schema::create('humidity_settings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('device_id')->nullable()->constrained('devices')->onDelete('cascade');
-            $table->float('warnLower');
-            $table->float('warnUpper');
+            $table->float('warnLowerTemperature');
+            $table->float('warnUpperTemperature');
+            $table->float('warnLowerHumidity');
+            $table->float('warnUpperHumidity');
             $table->string('status');
             $table->string('set_by');
             $table->timestamp('recorded_at')->default(DB::raw('CURRENT_TIMESTAMP'));
@@ -116,19 +119,37 @@ return new class extends Migration
             $table->timestamp('recorded_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
 
-        Schema::create('waterDepth_logs', function (Blueprint $table) {
+        Schema::create('water_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('device_id')->nullable()->constrained('devices')->onDelete('cascade');
-            $table->enum('status', ['on', 'off'])->default('off');
-            $table->float('amount')->nullable(); // dalam liter/ml
+            $table->float('value')->nullable(); // dalam liter/ml
+            $table->string('status');
             $table->timestamp('recorded_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
 
         Schema::create('fertilizer_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('device_id')->nullable()->constrained('devices')->onDelete('cascade');
-            $table->enum('status', ['on', 'off'])->default('off');
+            $table->string('status');
             $table->float('amount')->nullable(); // dalam liter/ml
+            $table->timestamp('recorded_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+        });
+
+        Schema::create('fertilizer_settings', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('device_id')->nullable()->constrained('devices')->onDelete('cascade');
+            $table->float('warnLower')->nullable();
+            $table->float('warnUpper')->nullable();
+            $table->string('status');
+            $table->string('set_by');
+            $table->timestamp('recorded_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+        });
+
+        Schema::create('water_settings', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('device_id')->nullable()->constrained('devices')->onDelete('cascade');
+            $table->float('warnLower')->nullable();
+            $table->float('warnUpper')->nullable();
+            $table->string('status');
+            $table->string('set_by');
             $table->timestamp('recorded_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
     }

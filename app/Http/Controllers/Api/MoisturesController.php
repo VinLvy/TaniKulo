@@ -16,11 +16,24 @@ class MoisturesController extends Controller
         'recorded_at' => null,
     ];
 
+
+    //Data Soil Moisture
     public function index()
     {
+        //get data from database or model
+        $moistureData = MoistureReading::latest('recorded_at')->first();
+
+        if (!$moistureData) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data moisture tidak ditemukan.',
+            ], 404);
+        }
+
         return response()->json([
-            'moisture' => self::$moistureData['value'],
-            'recorded_at' => self::$moistureData['recorded_at']
+            'success' => true,
+            'moisture' => $moistureData->value,
+            'recorded_at' => $moistureData->recorded_at
         ]);
     }
 
