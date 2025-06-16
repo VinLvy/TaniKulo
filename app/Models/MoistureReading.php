@@ -11,7 +11,7 @@ class MoistureReading extends Model
 
     protected $table = 'moisture_readings';
 
-    protected $fillable = ['device_id', 'moisture', 'status', 'recorded_at'];
+    protected $fillable = ['moisture', 'status', 'recorded_at'];
 
     public $timestamps = false;
 

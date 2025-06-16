@@ -11,7 +11,7 @@ class MoisturesSetting extends Model
 
     protected $table = 'moisture_settings';
 
-    protected $fillable = ['device_id', 'warnLower', 'warnUpper', 'status', 'set_by', 'recorded_at'];
+    protected $fillable = ['warnLower', 'warnUpper', 'status', 'set_by', 'recorded_at'];
 
     public $timestamps = false;
 

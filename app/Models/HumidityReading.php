@@ -11,7 +11,7 @@ class HumidityReading extends Model
 
     protected $table = 'humidity_readings';
 
-    protected $fillable = ['device_id', 'humidity', 'temperature', 'status', 'recorded_at'];
+    protected $fillable = ['humidity', 'temperature', 'status', 'recorded_at'];
 
     public $timestamps = false;
 

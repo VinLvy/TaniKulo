@@ -11,7 +11,7 @@ class LuxSetting extends Model
 
     protected $table = 'lux_settings';
 
-    protected $fillable = ['device_id', 'warnLower', 'warnUpper', 'status', 'set_by', 'recorded_at'];
+    protected $fillable = ['warnLower', 'warnUpper', 'status', 'set_by', 'recorded_at'];
 
     public $timestamps = false;
 

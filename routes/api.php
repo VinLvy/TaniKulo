@@ -64,14 +64,20 @@ Route::prefix('humidity')->as('humidity.')->controller(HumidityController::class
 
 // Group: Raindrop
 Route::prefix('raindrop')->as('raindrop.')->controller(RainDropController::class)->group(function () {
-    Route::get('/', 'index')->name('index');     // lux.index
-    Route::post('/store', 'store')->name('store');  // lux.update
+    Route::get('/', 'index')->name('index');     // raindrop.index
+    Route::post('/store', 'store')->name('store');  // raindrop.update
+
+    // SETTING RAIN DROP 
+    Route::post('/SettingRaindrop', 'SettingRaindropStore')->name('SettingRaindropStore');
+    // setting humidity update
+    Route::post('/UpdateSettingRaindrop', 'SettingRaindropUpdate')->name('SettingRaindropUpdate');
 });
 
 // Group: Lux
 Route::prefix('lux')->as('lux.')->controller(LuxController::class)->group(function () {
     Route::get('/', 'index')->name('index');     // lux.index
     Route::post('/', 'update')->name('update');  // lux.update
+    Route::post('/store', 'store')->name('store');  // lux.store
 });
 
 // Group: pH

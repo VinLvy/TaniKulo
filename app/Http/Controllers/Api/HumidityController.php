@@ -114,8 +114,10 @@ class HumidityController extends Controller
         if ($setting) {
             try {
                 $iotUrl = "http://your-iot-device.local/api/set-humidity?" . http_build_query([
-                    'warnLower' => $request->warnLower,
-                    'warnUpper' => $request->warnUpper,
+                    'warnLowerTemperature' => $request->warnLowerTemperature,
+                    'warnUpperTemperature' => $request->warnUpperTemperature,
+                    'warnLowerHumidity' => $request->warnLowerHumidity,
+                    'warnUpperHumidity' => $request->warnUpperHumidity,
                     'device_id' => $request->device_id
                 ]);
 
