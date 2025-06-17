@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\LuxController;
 use App\Http\Controllers\Api\PhController;
 use App\Http\Controllers\Api\ExportController;
 use App\Http\Controllers\RainDropController;
+use App\Http\Controllers\Api\NotificationController;
 
 // Tes routes
 Route::match(['get', 'post'], '/tes', [TestController::class, '__invoke'])->name('tes.invoke');
@@ -103,6 +104,12 @@ Route::prefix('export')->as('export.')->controller(ExportController::class)->gro
     Route::get('/lux', 'lux')->name('lux');                       // /api/export/lux
     Route::get('/fertilizer', 'fertilizer')->name('fertilizer'); // /api/export/fertilizer
     Route::get('/water', 'water')->name('water');                 // /api/export/water
+});
+
+// Group: Notifications
+Route::prefix('notifications')->as('notifications.')->controller(NotificationController::class)->group(function () {
+    Route::get('/', 'index')->name('index');     // notifications.index
+    Route::post('/send', 'send')->name('send');  // notifications.send
 });
 
 Route::post('/device/calibrate',      [DeviceController::class, 'sendCalibration']);
