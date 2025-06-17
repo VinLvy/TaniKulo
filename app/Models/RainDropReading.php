@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\Device;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class LuxSetting extends Model
+class RainDropReading extends Model
 {
     use HasFactory;
 
-    protected $table = 'lux_settings';
+    protected $table = 'rainDrops_readings';
 
-    protected $fillable = ['warnLower', 'warnUpper', 'status', 'set_by', 'recorded_at'];
+    protected $fillable = ['rainDrops', 'status', 'recorded_at'];
 
     public $timestamps = false;
 

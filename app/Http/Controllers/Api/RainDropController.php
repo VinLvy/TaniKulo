@@ -1,29 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\MoistureReading;
-use App\Models\MoisturesSetting;
+use App\Models\RainDropReading;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 
-class MoisturesController extends Controller
+class RainDropController extends Controller
 {
-    // TESTING PURPOSES ONLY
-    private static $moistureData = [
-        'value' => 0.55, // default moisture value (0 - 1)
-        'recorded_at' => null,
-    ];
-
-
-    //Data Soil Moisture
     public function index()
     {
-        //get data from database or model
-        $moistureData = MoistureReading::latest('recorded_at')->first();
+        $RainDropData = RainDropReading::latest('recorded_at')->first();
 
-        if (!$moistureData) {
+        if (!$RainDropData) {
             return response()->json([
                 'success' => false,
                 'message' => 'Data moisture tidak ditemukan.',
@@ -32,43 +22,24 @@ class MoisturesController extends Controller
 
         return response()->json([
             'success' => true,
-            'moisture' => $moistureData->value,
-            'recorded_at' => $moistureData->recorded_at
+            'rainDrop' => $RainDropData->value,
+            'status' => $RainDropData->status,
+            'recorded_at' => $RainDropData->recorded_at
         ]);
     }
 
-    public function update(Request $request)
-    {
-        $request->validate([
-            'moisture' => 'required|numeric|min:0|max:1',
-        ]);
-
-        self::$moistureData['value'] = $request->moisture;
-        self::$moistureData['recorded_at'] = now();
-
-        return response()->json([
-            'message' => 'Moisture value updated successfully',
-            'moisture' => self::$moistureData['value'],
-            'recorded_at' => self::$moistureData['recorded_at']
-        ]);
-    }
-
-    /**
-     * Store data kelembapan dari IoT ke database
-     */
+    //store data from IoT to Database
     public function store(Request $request)
     {
         // Validasi request
         $request->validate([
-            'moisture' => 'required|numeric|min:0|max:100',
+            'rain_value' => 'required|numeric|min:0|max:100',
             'status' => 'required|string',
-            'device_id' => 'nullable|exists:devices,id'
         ]);
 
         // Simpan data ke database
-        $reading = MoistureReading::create([
-            'device_id' => $request->device_id,
-            'moisture' => $request->moisture,
+        $reading = RainDropReading::create([
+            'rain_value' => $request->rain_value,
             'status' => $request->status,
             'recorded_at' => now(),
         ]);
@@ -76,7 +47,7 @@ class MoisturesController extends Controller
         // Beri respon sukses
         if ($reading) {
             return response()->json([
-                'message' => 'Data kelembapan berhasil disimpan.',
+                'message' => 'Data Hujan berhasil disimpan.',
                 'data' => $reading
             ], 201);
         } else {
@@ -86,10 +57,8 @@ class MoisturesController extends Controller
         }
     }
 
-    /**
-     * Simpan pengaturan kelembapan dari aplikasi + kirim ke IoT
-     */
-    public function settingMoistureStore(Request $request)
+    //upload settings ( STILL DON'T KNOW IF THIS NEED OR NO !  )
+    public function settingRainDropStore(Request $request)
     {
         // Validasi input
         $request->validate([
@@ -101,12 +70,12 @@ class MoisturesController extends Controller
 
         // Tandai setting sebelumnya sebagai offline untuk device yang sama (jika ada)
         if ($request->device_id) {
-            MoisturesSetting::where('device_id', $request->device_id)
+            RainDropReading::where('device_id', $request->device_id)
                 ->where('status', 'online')
                 ->update(['status' => 'offline']);
         }
 
-        $createSetting = MoisturesSetting::create([
+        $createSetting = RainDropReading::create([
             'device_id' => $request->device_id,
             'warnLower' => $request->warnLower,
             'warnUpper' => $request->warnUpper,
@@ -145,39 +114,5 @@ class MoisturesController extends Controller
         return response()->json([
             'message' => 'Gagal menyimpan data.',
         ], 500);
-    }
-
-    public function settingMoistureUpdate(Request $request, $id)
-    {
-        // Validasi input
-        $request->validate([
-            'warnLower' => 'required|numeric|min:0|max:100',
-            'warnUpper' => 'required|numeric|min:0|max:100',
-            'status' => 'required|string',
-            'set_by' => 'required|string',
-        ]);
-
-        // Cari data berdasarkan ID
-        $setting = MoisturesSetting::find($id);
-
-        if (!$setting) {
-            return response()->json([
-                'message' => 'Data tidak ditemukan.',
-            ], 404);
-        }
-
-        // Update data
-        $setting->update([
-            'warnLower' => $request->warnLower,
-            'warnUpper' => $request->warnUpper,
-            'status' => $request->status,
-            'set_by' => $request->set_by,
-            'recorded_at' => now(),
-        ]);
-
-        return response()->json([
-            'message' => 'Pengaturan sensor berhasil diperbarui.',
-            'data' => $setting
-        ], 200);
     }
 }

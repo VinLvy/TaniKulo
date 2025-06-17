@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class WaterLog extends Model
+class WaterLevelReading extends Model
 {
-    protected $fillable = ['device_id', 'status', 'amount', 'recorded_at'];
+    protected $table = 'water_logs';
+
+    protected $fillable = ['status', 'value', 'recorded_at'];
 
     public function device()
     {

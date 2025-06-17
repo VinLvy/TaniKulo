@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Device;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class LuxSetting extends Model
+class FertilizerLevelSetting extends Model
 {
     use HasFactory;
 
-    protected $table = 'lux_settings';
+    protected $table = 'fertilizer_settings';
 
     protected $fillable = ['warnLower', 'warnUpper', 'status', 'set_by', 'recorded_at'];
 

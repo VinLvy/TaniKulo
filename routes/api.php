@@ -13,6 +13,8 @@ use App\Http\Controllers\Api\HumidityController;
 use App\Http\Controllers\Api\LuxController;
 use App\Http\Controllers\Api\PhController;
 use App\Http\Controllers\Api\ExportController;
+use App\Http\Controllers\RainDropController;
+use App\Http\Controllers\Api\NotificationController;
 
 // Tes routes
 Route::match(['get', 'post'], '/tes', [TestController::class, '__invoke'])->name('tes.invoke');
@@ -61,10 +63,22 @@ Route::prefix('humidity')->as('humidity.')->controller(HumidityController::class
     Route::post('/updateSettingHumidity', 'settingHumidityUpdate')->name('settingHumidityUpdate');
 });
 
+// Group: Raindrop
+Route::prefix('raindrop')->as('raindrop.')->controller(RainDropController::class)->group(function () {
+    Route::get('/', 'index')->name('index');     // raindrop.index
+    Route::post('/store', 'store')->name('store');  // raindrop.update
+
+    // SETTING RAIN DROP 
+    Route::post('/SettingRaindrop', 'SettingRaindropStore')->name('SettingRaindropStore');
+    // setting humidity update
+    Route::post('/UpdateSettingRaindrop', 'SettingRaindropUpdate')->name('SettingRaindropUpdate');
+});
+
 // Group: Lux
 Route::prefix('lux')->as('lux.')->controller(LuxController::class)->group(function () {
     Route::get('/', 'index')->name('index');     // lux.index
     Route::post('/', 'update')->name('update');  // lux.update
+    Route::post('/store', 'store')->name('store');  // lux.store
 });
 
 // Group: pH
@@ -90,6 +104,12 @@ Route::prefix('export')->as('export.')->controller(ExportController::class)->gro
     Route::get('/lux', 'lux')->name('lux');                       // /api/export/lux
     Route::get('/fertilizer', 'fertilizer')->name('fertilizer'); // /api/export/fertilizer
     Route::get('/water', 'water')->name('water');                 // /api/export/water
+});
+
+// Group: Notifications
+Route::prefix('notifications')->as('notifications.')->controller(NotificationController::class)->group(function () {
+    Route::get('/', 'index')->name('index');     // notifications.index
+    Route::post('/send', 'send')->name('send');  // notifications.send
 });
 
 Route::post('/device/calibrate',      [DeviceController::class, 'sendCalibration']);
